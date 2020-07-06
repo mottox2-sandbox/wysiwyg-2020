@@ -1,3 +1,14 @@
+# wysiwyg-2020
+
+This repository is my wysiwyg playground.
+
+## wysiwyg frameworks
+
+* [ProseMirror](https://prosemirror.net/)
+* [Quill](https://quilljs.com/)
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
