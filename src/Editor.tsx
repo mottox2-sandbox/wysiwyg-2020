@@ -1,19 +1,36 @@
 import React from 'react'
-import { HtmlEditor, MenuBar } from '@aeaton/react-prosemirror'
-import { options, menu } from '@aeaton/react-prosemirror-config-default'
+import { useEffect } from "react";
 
-const CustomEditor = ({ value, onChange }: any) => (
-  <HtmlEditor
-    options={options}
-    value={value}
-    onChange={onChange}
-    render={({ editor, view }: any) => (
-      <div>
-        <MenuBar menu={menu} view={view}/>
-        {editor}
-      </div>
-    )}
-  />
-)
+import { EditorState } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
+import { Schema, DOMParser } from "prosemirror-model";
+import { schema } from "prosemirror-schema-basic";
+import { addListNodes } from "prosemirror-schema-list";
+import { exampleSetup } from "prosemirror-example-setup";
 
-export default CustomEditor
+const useEditor = () => {
+  useEffect(() => {
+    const mySchema = new Schema({
+      nodes: addListNodes((schema as any).spec.nodes, "paragraph block*", "block"),
+      marks: schema.spec.marks,
+    });
+
+    const view = new EditorView(document.querySelector("#editor")!, {
+      state: EditorState.create({
+        doc: DOMParser.fromSchema(mySchema).parse(
+          document.querySelector("#content")!
+        ),
+        plugins: exampleSetup({ schema: mySchema }),
+      }),
+    });
+    return () => view.destroy()
+  }, []);
+};
+
+export const Editor = () => {
+  useEditor()
+  return <>
+    <div id="editor" />
+    <div id="content">Hello</div>
+  </>;
+};
